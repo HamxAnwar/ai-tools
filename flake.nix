@@ -5,30 +5,38 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
+    nix-ai-tools.url = "github:numtide/nix-ai-tools";
   };
 
-  outputs = { self, nixpkgs, nixpkgs-unstable, flake-utils }:
+  outputs = { self, nixpkgs, nixpkgs-unstable, flake-utils, nix-ai-tools }:
+    flake-utils.lib.eachDefaultSystem (system:
+      let
+        pkgs = nixpkgs.legacyPackages.${system};
+        pkgs-unstable = nixpkgs-unstable.legacyPackages.${system};
+      in {
+        devShells.default = pkgs.mkShell {
+          buildInputs = with pkgs; [
+            git
+            # ollama  # From stable nixpkgs; use pkgs-unstable.ollama if needed
+          ] ++ (with nix-ai-tools.packages.${system}; [
+            # AI tools from nix-ai-tools
+            opencode
+            openspec
+            # Add more as needed, e.g.:
+            # claude-code
+            # gemini-cli
+            # goose-cli
+          ]);
 
-  flake-utils.lib.eachDefaultSystem (system:
-    let
-      pkgs = nixpkgs.legacyPackages.${system};
-      pkgs-unstable = nixpkgs-unstable.legacyPackages.${system};
-    in {
-      devShells.default = pkgs.mkShell {
-        buildInputs = with pkgs; [
-          pkgs-unstable.opencode
-          pkgs-unstable.goose-cli
-          ollama
-          git
-        ];
-
-        shellHook = ''
-          echo "🤖 AI Development Environment Ready!"
-          echo "   OpenCode version: $(opencode --version)"
-          echo "   Goose version: $(goose --version)"
-          echo "   Available models: $(ollama list)"
-          echo ""
-        '';
-      };
-    });
+          shellHook = ''
+            echo ""
+            echo "AI Development Environment Ready!"
+            echo " • OpenCode : $(opencode --version 2>/dev/null || echo 'not found')"
+            echo " • OpenSpec : $(openspec --version 2>/dev/null || echo 'not found')"
+            # echo " • Ollama   : $(ollama --version 2>/dev/null || echo 'not found')"
+            echo ""
+          '';
+        };
+      }
+    );
 }

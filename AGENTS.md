@@ -1,22 +1,18 @@
-# AGENTS.md
-## Environment
-Nix flake-based AI dev environment. Enter with `nix develop`.
-## Commands
-- `nix develop` - dev shell
-- `nix flake update` - update deps
-- `nix flake check` - validate
-## Code Style
-- Nix conventions
-- Descriptive names
-- Minimal config
-- Prefer stable packages
-## Development
-- OpenCode + Ollama for AI coding
-- No build/lint/test cycle
-- Concise shellHook
-- Comment purposes
-## Best Practices
-- Test with `nix develop`
-- Update flake.lock
-- Minimal inputs
-- Semantic versioning
+<!-- OPENSPEC:START -->
+# OpenSpec Instructions
+
+These instructions are for AI assistants working in this project.
+
+Always open `@/openspec/AGENTS.md` when the request:
+- Mentions planning or proposals (words like proposal, spec, change, plan)
+- Introduces new capabilities, breaking changes, architecture shifts, or big performance/security work
+- Sounds ambiguous and you need the authoritative spec before coding
+
+Use `@/openspec/AGENTS.md` to learn:
+- How to create and apply change proposals
+- Spec format and conventions
+- Project structure and guidelines
+
+Keep this managed block so 'openspec update' can refresh the instructions.
+
+<!-- OPENSPEC:END -->
