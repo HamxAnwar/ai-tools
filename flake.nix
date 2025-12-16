@@ -2,13 +2,13 @@
   description = "AI development environment with Aider and Ollama";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
-    nix-ai-tools.url = "github:numtide/nix-ai-tools";
+    llm-agents.url = "github:numtide/llm-agents.nix";
   };
 
-  outputs = { self, nixpkgs, nixpkgs-unstable, flake-utils, nix-ai-tools }:
+  outputs = { self, nixpkgs, nixpkgs-unstable, flake-utils, llm-agents }:
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
@@ -18,7 +18,7 @@
           buildInputs = with pkgs; [
             git
             # ollama  # From stable nixpkgs; use pkgs-unstable.ollama if needed
-          ] ++ (with nix-ai-tools.packages.${system}; [
+          ] ++ (with llm-agents.packages.${pkgs.system}; [
             # AI tools from nix-ai-tools
             opencode
             openspec
